@@ -1,38 +1,52 @@
 import base64
 import csv
 import os
-
-# from pathlib import Path
-from typing import List, Tuple
+from typing import List, Tuple, TypedDict
+from uuid import uuid4
 
 import psycopg2
-# from dotenv import load_dotenv
 
-from interface import IPostgreSQLConnection, IServiceDataProcessor, ParamsConnection
+from service.exception import (
+    DBConnectionException,
+    DBQueryException,
+    SaveImageException,
+)
 
 
-class PostgreSQLConnection(IPostgreSQLConnection):
+class ParamsConnection(TypedDict):
+    database: str
+    user: str
+    password: str
+    host: str
+    port: str
+
+
+class PostgreSQLConnection:
     def __init__(self, params: ParamsConnection = None) -> None:
-        # self.load_env()
         self.params = params
 
-    # def load_env(self) -> None:
-    #     BASE_DIR: Path = Path(__file__).resolve().parent
-    #     load_dotenv(os.path.join(BASE_DIR, ".env"))
-
     def connect(self) -> psycopg2.extensions.connection:
-        return psycopg2.connect(**self.params)
+        try:
+            return psycopg2.connect(**self.params)
+        except psycopg2.OperationalError as e:
+            raise DBConnectionException(e)
 
 
-class ServiceDataProcessor(IServiceDataProcessor):
+class ServiceDataProcessor:
     def __init__(self, connection: PostgreSQLConnection) -> None:
         self.connection = connection
 
     def fetchData(self, query: str) -> Tuple[List[Tuple], List[str]]:
-        with self.connection.connect() as conn:
-            with conn.cursor() as cur:
-                cur.execute(query)
-                return cur.fetchall()[:100], [col[0] for col in cur.description]
+        try:
+            with self.connection.connect() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(query)
+                    return cur.fetchall(), [col[0] for col in cur.description]
+        except psycopg2.OperationalError as e:
+            raise DBConnectionException(e)
+
+        except Exception as e:
+            raise DBQueryException(e)
 
     def exportToCSV(
         self,
@@ -46,7 +60,7 @@ class ServiceDataProcessor(IServiceDataProcessor):
         if not os.path.exists(pathImages):
             os.makedirs(pathImages)
 
-        with open(f"{baseDirectory}/output.csv", "w", newline="") as f:
+        with open(f"{baseDirectory}/data.csv", "w", newline="") as f:
             writer = csv.writer(f)
             colNames[-1] = "image"
             writer.writerow(colNames)
@@ -58,28 +72,32 @@ class ServiceDataProcessor(IServiceDataProcessor):
                 row[-1] = filename
                 writer.writerow(row)
 
-    def exportToCSV2(self, row: Tuple, pathImages: str, writer: csv.writer, indexImage: int, indexName: int) -> None:
+    def exportToCSV2(
+        self,
+        row: Tuple,
+        writer: csv.writer,
+        hasImage: bool = False,
+        pathImages: str = None,
+        indexImage: int = None,
+    ) -> None:
         row = list(row)
-        filename = self.saveImage(row[indexImage], pathImages, str(row[indexName]))
-        row[-1] = filename
+        if hasImage:
+            try:
+                filename = self.saveImage(row[indexImage], pathImages)
+            except Exception:
+                raise SaveImageException(
+                    "Quelque chose c'est mal passé lors de l'enregistrement de l'image. Veuillez bien l'index de la colonne image est correcte." # noqa
+                )
+            row[-1] = filename
         writer.writerow(row)
 
-    def saveImage(self, base64_image: bytes, path: str, name: str) -> str:
-        filename: str = f"{path}/{name}".replace(" ", "_") + ".png"
+    def saveImage(self, base64_image: bytes, path: str) -> str | None:
+        name = str(uuid4())
+        filename: str = f"{path}/{name}.png"
+        if not base64_image:
+            return None
         base64_img: bytes = base64.b64encode(base64_image)
         img_data: bytes = base64.b64decode(base64_img)
         with open(filename, "wb") as f:
             f.write(img_data)
         return f"images/{name}".replace(" ", "_") + ".png"
-
-
-def main() -> None:
-    postgres_connection: PostgreSQLConnection = PostgreSQLConnection()
-    data_processor: ServiceDataProcessor = ServiceDataProcessor(postgres_connection)
-
-    data, column_names = data_processor.fetch_data()
-    data_processor.export_to_csv(column_names, data)
-
-
-if __name__ == "__main__":
-    main()

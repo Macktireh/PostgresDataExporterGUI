@@ -162,3 +162,5 @@ cython_debug/
 *.csv
 images/
 data/
+export/
+*.zip
