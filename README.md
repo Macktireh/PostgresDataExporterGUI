@@ -42,11 +42,13 @@ The application consists of multiple modules organized as follows:
     git clone https://github.com/your-username/PostgresDataExporterGUI.git
     cd PostgresDataExporterGUI
     ```
+    ```bash
+    cd PostgresDataExporterGUI
+    ```
 
 2. Create a virtual environment and activate it:
     ```bash
     python -m venv venv
-    source venv/bin/activate  # On Windows, use 'venv\Scripts\activate'
     ```
 
     *for MacOS or Linux*
