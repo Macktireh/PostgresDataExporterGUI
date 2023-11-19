@@ -3,6 +3,7 @@ import os
 from tkinter import filedialog, messagebox
 
 import customtkinter as ctk
+
 from components.formConnectionDB import FormConnectionDB
 from components.imageIndexForm import ImageIndexForm
 from components.progressBar import ProgressBar
