@@ -3,32 +3,38 @@
 PostgresDataExporterGUI is a Python application that allows you to export data from a PostgreSQL database to a CSV file with the option to include images. The application provides a graphical user interface (GUI) for ease of use.
 
 ## Table of Contents
-- [Overview](#overview)
+- [Feature](#feature)
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Usage](#usage)
 - [License](#license)
 
 
-## Overview
+## Feature
 
-The application consists of multiple modules organized as follows:
+#### Database Connection
+- Ability to input PostgreSQL database connection details, including username, password, host, port, and database name.
+- Error handling for database connection exceptions.
 
-- **service.exception.py:** Defines custom exceptions related to database connections, queries, exporting CSV, and saving images.
+#### SQL Query Execution
+- Input area for entering SQL queries to fetch data from the database.
+- Handling of database query exceptions.
 
-- **service.api.py:** Contains classes for handling PostgreSQL connections and processing data from the database. It includes methods for fetching data, exporting data to CSV, and saving images.
+#### Data Export to CSV
+- Export fetched data to a CSV file.
+- Option to include images in the exported data.
+- Ability to choose the export directory.
+- CSV file includes a column for images with image files saved in a specified directory.
 
-- **components.formConnectionDB:** Defines a form for collecting database connection information using custom tkinter components.
+#### GUI Components
+- Customized Tkinter-based GUI with various components, including input fields, checkboxes, buttons, progress bars, and text areas.
 
-- **components.imageIndexForm.py:** Provides a form for specifying whether the dataset includes image columns and the index of the image column.
+#### Exception Handling
+- Custom exceptions (`DBConnectionException`, `DBQueryException`, `ExportCSVException`, `SaveImageException`) for handling specific error scenarios.
 
-- **components.input.py:** Implements a custom input component for the GUI.
-
-- **components.progressBar.py:** Defines a progress bar component for visualizing the export progress.
-
-- **components.textarea.py:** Implements a text area component for multiline text input.
-
-- **App:** The main application class that orchestrates the entire GUI. It includes functionality for choosing an export directory, specifying a SQL query, and exporting data to a CSV file.
+#### Virtual Environment and Dependency Management
+- Instructions for creating and activating a virtual environment.
+- Installation of project dependencies from the `requirements.txt` file.
 
 
 ## Requirements
