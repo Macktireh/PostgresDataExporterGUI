@@ -89,7 +89,6 @@ class App(ctk.CTk):
             if not self.imageIndexForm.getValueInput():
                 messagebox.showerror("Error", "Veuillez saisir l'index de la colonne d'images")
                 return
-            # check if self.imageIndexForm.getValueInput() is a number
             try:
                 int(self.imageIndexForm.getValueInput())
             except ValueError:
