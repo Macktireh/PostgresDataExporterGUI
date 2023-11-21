@@ -53,7 +53,7 @@ PostgresDataExporterGUI is a Python application that allows you to export data f
 
 2. Create a virtual environment and activate it:
     ```bash
-    python -m venv venv
+    python -m venv .venv
     ```
 
     *for MacOS or Linux*
@@ -63,7 +63,7 @@ PostgresDataExporterGUI is a Python application that allows you to export data f
 
     *for Windows*
     ```bash
-    .\venv\Scripts\activate
+    .\.venv\Scripts\activate
     ```
 
 3. Install dependencies:
