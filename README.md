@@ -38,7 +38,7 @@ PostgresDataExporterGUI is a Python application that allows you to export data f
 
 
 ## Requirements
-- Python 3.10
+- Python 3.10 or later
 - Dependencies listed in `requirements.txt`
 
 
