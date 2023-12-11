@@ -2,6 +2,7 @@
 
 PostgresDataExporterGUI is a Python application that allows you to export data from a PostgreSQL database to a CSV file with the option to include images. The application provides a graphical user interface (GUI) for ease of use.
 
+
 ## Table of Contents
 - [Screenshots](#screenshots)
 - [Feature](#feature)
@@ -42,7 +43,7 @@ PostgresDataExporterGUI is a Python application that allows you to export data f
 
 
 ## Requirements
-- Python 3.10
+- Python 3.10 or later
 - Dependencies listed in `requirements.txt`
 
 
