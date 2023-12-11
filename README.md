@@ -13,6 +13,7 @@ PostgresDataExporterGUI is a Python application that allows you to export data f
 
 
 ## Screenshots
+
 ![Alt text](screenshot/image.png)
 
 ## Feature
