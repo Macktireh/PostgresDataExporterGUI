@@ -162,4 +162,3 @@ cython_debug/
 images/
 data/
 export/
-*.zip
