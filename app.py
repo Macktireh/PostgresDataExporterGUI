@@ -105,12 +105,7 @@ class App(ctk.CTk):
 
         try:
             record, colNames = serviceDataProcessor.fetchData(self.query.getText())
-        except DBConnectionException as e:
-            messagebox.showerror("Error", e.message)
-            self.progress.destroy()
-            self.buttonExport.configure(state="normal")
-            return
-        except DBQueryException as e:
+        except (DBConnectionException, DBQueryException) as e:
             messagebox.showerror("Error", e.message)
             self.progress.destroy()
             self.buttonExport.configure(state="normal")
@@ -128,14 +123,14 @@ class App(ctk.CTk):
         else:
             pathImages = None
 
-        with open(
-            f"{self.pathDirectory}/data.csv", "w", newline="", encoding="utf-8"
-        ) as f:
-            try:
+        output_file_path = f"{self.pathDirectory}/data.csv"
+        try:
+            with open(output_file_path, "w", newline="", encoding="utf-8") as f:
                 writer = csv.writer(f)
                 if self.imageIndexForm.getValueCheckbox() == 1:
                     colNames[int(self.imageIndexForm.getValueInput())] = "image"
                 writer.writerow(colNames)
+                progress_increment = 100 / len(record)
                 for i, row in enumerate(record):
                     serviceDataProcessor.exportToCSV2(
                         row,
@@ -144,18 +139,19 @@ class App(ctk.CTk):
                         pathImages,
                         int(self.imageIndexForm.getValueInput()),
                     )
-                    valueProgress = int((i + 1) / len(record) * 100)
+                    valueProgress = int((i + 1) * progress_increment)
                     print(f"{valueProgress}%", "row", i + 1, "of", len(record))
                     self.progress.setProgress(valueProgress / 100)
-            except Exception as e:
-                messagebox.showerror("Error", e)
-                self.progress.destroy()
-                self.buttonExport.configure(state="normal")
-                return
+
+        except Exception as e:
+            messagebox.showerror("Error", e)
+            self.progress.destroy()
+            self.buttonExport.configure(state="normal")
+            return
 
         messagebox.showinfo(
             "Success",
-            f"Le fichier {self.pathDirectory}/data.csv a été exporté avec success",
+            f"Le fichier {output_file_path} a été exporté avec succès",
         )
 
         self.progress.destroy()
