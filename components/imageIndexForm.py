@@ -23,7 +23,6 @@ class ImageIndexForm(ctk.CTkFrame):
             offvalue=0,
             command=self.onCheck,
         )
-
         self.imageColumnIndex = Input(self, label="Index colonne images", width=120, state="disabled")
 
         self.hasImage.grid(row=0, column=0, padx=5, pady=5)
