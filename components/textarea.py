@@ -21,9 +21,6 @@ class TextArea(ctk.CTkFrame):
         self.label = ctk.CTkLabel(self, text=self.label)
         self.label.place(x=5, y=5)
 
-        # self.frameEntry = ctk.CTkFrame(self)
-        # self.frameEntry.pack()
-
         self.entry = ctk.CTkTextbox(
             self,
             font=("Arial", 14),

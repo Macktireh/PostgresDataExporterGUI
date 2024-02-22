@@ -15,9 +15,7 @@ class FormConnectionDB(ctk.CTkFrame):
 
         super().__init__(self.master, width=self.width, height=self.height)
 
-        self.username = Input(
-            self, label="Username", width=220
-        )
+        self.username = Input(self, label="Username", width=220)
         self.password = Input(self, label="Password", width=220, isPassword=True)
         self.host = Input(self, label="Host", width=220, defaultValue="localhost")
         self.port = Input(self, label="Port", width=220, defaultValue="5432")
@@ -31,27 +29,18 @@ class FormConnectionDB(ctk.CTkFrame):
 
     def getFormData(self) -> ParamsConnection:
         return {
-            "database": self.database.getValueInput(),
             "user": self.username.getValueInput(),
             "password": self.password.getValueInput(),
             "host": self.host.getValueInput(),
             "port": self.port.getValueInput(),
+            "database": self.database.getValueInput(),
         }
 
     def validateFormData(self) -> bool:
-        if not self.username.getValueInput():
-            messagebox.showerror("Erreur", "Le champ USERNAME est obligatoire")
-            return False
-        if not self.password.getValueInput():
-            messagebox.showerror("Erreur", "Le champ PASSWORD est obligatoire")
-            return False
-        if not self.host.getValueInput():
-            messagebox.showerror("Erreur", "Le champ HOST est obligatoire")
-            return False
-        if not self.port.getValueInput():
-            messagebox.showerror("Erreur", "Le champ PORT est obligatoire")
-            return False
-        if not self.database.getValueInput():
-            messagebox.showerror("Erreur", "Le champ DATABASE est obligatoire")
-            return False
+        form_data = self.getFormData()
+        for field_key, value in form_data.items():
+            if not value:
+                field_name_capitalized = field_key.capitalize() if field_key != "user" else "Username"
+                messagebox.showerror("Erreur", f"Le champ {field_name_capitalized} est obligatoire")
+                return False
         return True
