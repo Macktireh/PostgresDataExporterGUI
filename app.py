@@ -12,9 +12,6 @@ from service.api import PostgreSQLConnection, ServiceDataProcessor
 from service.exception import DBConnectionException, DBQueryException
 
 
-ctk.set_appearance_mode("dark")
-
-
 class App(ctk.CTk):
     pathDirectory: str = None
     toggle: bool = False
@@ -77,10 +74,6 @@ class App(ctk.CTk):
         if not self.formConnectionDB.validateFormData():
             return
 
-        if not self.pathDirectory:
-            messagebox.showerror("Error", "Veuillez choisir un dossier")
-            return
-
         if not self.query.getText():
             messagebox.showerror("Error", "Veuillez saisir une requête SQL")
             return
@@ -94,6 +87,10 @@ class App(ctk.CTk):
             except ValueError:
                 messagebox.showerror("Error", "Veuillez saisir un nombre valide pour l'index de la colonne d'images")
                 return
+
+        if not self.pathDirectory:
+            messagebox.showerror("Error", "Veuillez choisir un dossier")
+            return
 
         self.buttonExport.configure(state="disabled")
         self.progress = ProgressBar(self)
